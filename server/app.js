@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
 const PORT = 5005;
 
 // STATIC DATA
@@ -11,6 +12,11 @@ const cohorts = require("./cohorts.json");
 
 // INITIALIZE EXPRESS APP - https://expressjs.com/en/4x/api.html#express
 const app = express();
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
+  .then(() => console.log("Connected!"))
+  .catch((err) => console.error("Error connecting to MongoDB", err));
 
 // MIDDLEWARE
 // Research Team - Set up CORS middleware here:
@@ -24,6 +30,11 @@ app.use(cookieParser());
 // ROUTES - https://expressjs.com/en/starter/basic-routing.html
 // Devs Team - Start working on the routes here:
 // ...
+app.use(
+  cors({
+    origin: ["http://127.0.0.1:5173"],
+  })
+);
 app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
